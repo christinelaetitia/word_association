@@ -56,6 +56,7 @@ mat <-matrix(nrow=length(unique_tokens),ncol=length(unique_tokens))
 colnames(mat) <-unique_tokens
 rownames(mat) <-unique_tokens
 
+#find relation of top 10 words 
 for(k in 1:ncol(mat)){
   for (l in 1:nrow(mat)){
     g <-grep(colnames(mat)[k],colnames(w))
