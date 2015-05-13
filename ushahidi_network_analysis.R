@@ -39,7 +39,10 @@ M2 = good %*% t(good)
 diag(M2) = 0
 
 # graph
+png(filename="graph.png")
 g = graph.adjacency(M2, weighted=TRUE, mode="undirected",
                     add.rownames=TRUE)
 # layout
 glay = layout.fruchterman.reingold(g)
+plot(g)
+dev.off()
