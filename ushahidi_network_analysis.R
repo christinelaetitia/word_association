@@ -46,3 +46,6 @@ g = graph.adjacency(M2, weighted=TRUE, mode="undirected",
 glay = layout.fruchterman.reingold(g)
 plot(g)
 dev.off()
+
+#write data to disk
+write.csv(M2,'data.csv')
