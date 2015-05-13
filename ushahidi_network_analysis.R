@@ -38,31 +38,9 @@ M2 = good %*% t(good)
 # set zeroes in diagonal
 diag(M2) = 0
 
-# graph
-png(filename="graph.png")
-g = graph.adjacency(M2, weighted=TRUE, mode="undirected",
-                    add.rownames=TRUE)
-# layout
-glay = layout.fruchterman.reingold(g)
-plot(g)
-dev.off()
-
-#write data to disk
-write.csv(M2,'data.csv')
-
-#....................
-
 # superimpose a cluster structure with k-means clustering
-kmg = kmeans(M3, centers=8)
+kmg = kmeans(M2, centers=8)
 gk = kmg$cluster
-
-# create nice colors for each cluster
-gbrew = c("red", brewer.pal(8, "Dark2"))
-gpal = rgb2hsv(col2rgb(gbrew))
-gcols = rep("", length(gk))
-for (k in 1:8) {
-  gcols[gk == k] = hsv(gpal[1,k], gpal[2,k], gpal[3,k], alpha=0.5)
-}
 
 # prepare ingredients for plot
 V(g3)$size = 10
@@ -74,9 +52,35 @@ V(g3)$frame.color = NA
 V(g3)$color = gcols
 E(g3)$color = hsv(0, 0, 0.7, 0.3)
 
+# create nice colors for each cluster
+gbrew = c("red", brewer.pal(8, "Dark2"))
+gpal = rgb2hsv(col2rgb(gbrew))
+gcols = rep("", length(gk))
+for (k in 1:8) {
+  gcols[gk == k] = hsv(gpal[1,k], gpal[2,k], gpal[3,k], alpha=0.5)
+}
+
 
 # plot
 glay = layout.fruchterman.reingold(g3)
+png(filename="graph.png")
 plot(g3, layout=glay)
 title("\nWord Relation",
       col.main="gray40", cex.main=1.5, family="serif")
+      
+plot(g)
+dev.off()
+
+#write data to disk
+write.csv(M2,'data.csv')
+
+
+
+
+
+
+
+
+
+
+
