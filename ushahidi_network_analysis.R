@@ -1,11 +1,12 @@
 
 #load pre-defined scripts
-source('text_process.R')
 source('UshaR.R')
 
 #load required libraries
 library(igraph)
 library(tm)
+library(xml)
+library(RColorBrewer)
 
 #get data
 mapurl = 'https://bindup.crowdmap.com/'
