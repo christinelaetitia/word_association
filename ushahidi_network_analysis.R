@@ -74,7 +74,7 @@ title("\nWord Relation",
       col.main="gray40", cex.main=1.5, family="serif")
       
 
-#write data to disk
+#write to disk
 write.csv(M2,'data.csv')
 
 
