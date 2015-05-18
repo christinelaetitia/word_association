@@ -19,44 +19,44 @@ incidents = data$incidentdescription
 corpus = Corpus(VectorSource(incidents))
 
 # term-document matrix
-tdm2 = TermDocumentMatrix(corpus,control=list(removePunctuations=TRUE,tolower=TRUE,stopwords=stopwords('SMART')))
+tdm= TermDocumentMatrix(corpus,control=list(removePunctuations=TRUE,tolower=TRUE,stopwords=stopwords('SMART')))
 
 # convert tdm to matrix
-m2= as.matrix(tdm2)
+m= as.matrix(tdm)
 
 # word counts
-wc = rowSums(m2)
+wc = rowSums(m)
 
 # get  words above the 3rd quantile
-lim<- GetLowerCorrLimit(text.data=tdm2,factor=factor_number) & quantile(wc, probs=0.5 )
-good = m2[wc > lim,]
+lim<- GetLowerCorrLimit(text.data=tdm,factor=factor_number) & quantile(wc, probs=0.5 )
+good = m[wc > lim,]
 
 # remove columns (docs) with zeroes
 good = good[,colSums(good)!=0]
 
 # adjacency matrix
-M2 = good %*% t(good)
+M = good %*% t(good)
 
 # set zeroes in diagonal
-diag(M2) = 0
+diag(M) = 0
 
 # graph
-g3= graph.adjacency(M2, weighted=TRUE, mode="undirected",
+g= graph.adjacency(M, weighted=TRUE, mode="undirected",
                      add.rownames=TRUE)
 
 # superimpose a cluster structure with k-means clustering
-kmg = kmeans(M2, centers=8)
+kmg = kmeans(M, centers=8)
 gk = kmg$cluster
 
 # prepare ingredients for plot
-V(g3)$size = 10
-V(g3)$label = V(g3)$name
-V(g3)$degree = degree(g3)
-V(g3)$label.cex = 1.5 * log10(V(g3)$degree)
-V(g3)$label.color = hsv(0, 0, 0.2, 0.55)
-V(g3)$frame.color = NA
-V(g3)$color = gcols
-E(g3)$color = hsv(0, 0, 0.7, 0.3)
+V(g)$size = 10
+V(g)$label = V(g)$name
+V(g)$degree = degree(g)
+V(g)$label.cex = 1.5 * log10(V(g)$degree)
+V(g)$label.color = hsv(0, 0, 0.2, 0.55)
+V(g)$frame.color = NA
+V(g)$color = gcols
+E(g)$color = hsv(0, 0, 0.7, 0.3)
 
 # create nice colors for each cluster
 gbrew = c("red", brewer.pal(8, "Dark2"))
@@ -68,14 +68,14 @@ for (k in 1:8) {
 
 
 # plot
-glay = layout.fruchterman.reingold(g3)
-plot(g3, layout=glay)
+glay = layout.fruchterman.reingold(g)
+plot(g, layout=glay)
 title("\nWord Relation",
       col.main="gray40", cex.main=1.5, family="serif")
       
 
 #write to disk
-write.csv(M2,'data.csv')
+write.csv(M,'data.csv')
 
 
 
