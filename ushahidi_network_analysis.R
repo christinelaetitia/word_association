@@ -1,15 +1,17 @@
 
 #load pre-defined scripts
 source('UshaR.R')
+source('text_process.R')
 
 #load required libraries
 library(igraph)
+library(arules)
 library(tm)
 library(xml)
 library(RColorBrewer)
 
 #get data
-mapurl = 'https://bindup.crowdmap.com/'
+mapurl = 'http://www.hatari.co.ke/'
 data = get_all_incidents(mapurl)
 incidents = data$incidentdescription
 
@@ -17,16 +19,16 @@ incidents = data$incidentdescription
 corpus = Corpus(VectorSource(incidents))
 
 # term-document matrix
-tdm2 = TermDocumentMatrix(corpus,control=list(removePunctuations=TRUE,tolower=TRUE,stopwords=stopwords('SMART')
+tdm2 = TermDocumentMatrix(corpus,control=list(removePunctuations=TRUE,tolower=TRUE,stopwords=stopwords('SMART')))
 
 # convert tdm to matrix
-m2 = as.matrix(tdm2)
+m2= as.matrix(tdm2)
 
 # word counts
 wc = rowSums(m2)
 
-# get those words above the 3rd quantile
-lim = quantile(wc, probs=0.5)
+# get  words above the 3rd quantile
+lim<- GetLowerCorrLimit(text.data=tdm2,factor=factor_number) & quantile(wc, probs=0.5 )
 good = m2[wc > lim,]
 
 # remove columns (docs) with zeroes
@@ -38,15 +40,19 @@ M2 = good %*% t(good)
 # set zeroes in diagonal
 diag(M2) = 0
 
+# graph
+g3= graph.adjacency(M2, weighted=TRUE, mode="undirected",
+                     add.rownames=TRUE)
+
 # superimpose a cluster structure with k-means clustering
 kmg = kmeans(M2, centers=8)
 gk = kmg$cluster
 
 # prepare ingredients for plot
 V(g3)$size = 10
-V(g3)$label = V(g)$name
-V(g3)$degree = degree(g)
-#V(g)$label.cex = 1.5 * log10(V(g)$degree)
+V(g3)$label = V(g3)$name
+V(g3)$degree = degree(g3)
+V(g3)$label.cex = 1.5 * log10(V(g3)$degree)
 V(g3)$label.color = hsv(0, 0, 0.2, 0.55)
 V(g3)$frame.color = NA
 V(g3)$color = gcols
@@ -63,13 +69,10 @@ for (k in 1:8) {
 
 # plot
 glay = layout.fruchterman.reingold(g3)
-png(filename="graph.png")
 plot(g3, layout=glay)
 title("\nWord Relation",
       col.main="gray40", cex.main=1.5, family="serif")
       
-plot(g)
-dev.off()
 
 #write data to disk
 write.csv(M2,'data.csv')
