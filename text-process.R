@@ -6,7 +6,7 @@ library(tm)
 CreateTdm <- function(text.data, stopwords='english', 
                       removePunctuation=TRUE, tolower=TRUE) {
   # create corpus
-  corpus <-Corpus(VectorSource(text.data))
+  corpus <-Corpus(VectorSource(incidents))
   
   # create term document matrix 
   tdm <-TermDocumentMatrix(corpus, 
