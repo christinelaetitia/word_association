@@ -38,13 +38,15 @@ M2 = good %*% t(good)
 # set zeroes in diagonal
 diag(M2) = 0
 
+# graph
+g3 = graph.adjacency(M2, weighted=TRUE, mode="undirected",
+                     add.rownames=TRUE)
+
 # superimpose a cluster structure with k-means clustering
 kmg = kmeans(M2, centers=8)
 gk = kmg$cluster
 
-# graph
-g3 = graph.adjacency(M3, weighted=TRUE, mode="undirected",
-                     add.rownames=TRUE) 
+ 
 # prepare ingredients for plot
 V(g3)$size = 10
 V(g3)$label = V(g3)$name
@@ -71,11 +73,7 @@ plot(g3, layout=glay)
 title("\nWord Relation",
       col.main="gray40", cex.main=1.5, family="serif")
       
-plot(g3)
-dev.off()
 
-#write data to disk
-write.csv(M2,'data.csv')
 
 
 
