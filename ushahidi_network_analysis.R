@@ -38,6 +38,10 @@ M2 = good %*% t(good)
 # set zeroes in diagonal
 diag(M2) = 0
 
+# graph
+g3 = graph.adjacency(M3, weighted=TRUE, mode="undirected",
+                     add.rownames=TRUE)
+
 # superimpose a cluster structure with k-means clustering
 kmg = kmeans(M2, centers=8)
 gk = kmg$cluster
