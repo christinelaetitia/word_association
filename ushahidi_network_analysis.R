@@ -42,6 +42,10 @@ diag(M2) = 0
 kmg = kmeans(M2, centers=8)
 gk = kmg$cluster
 
+# graph
+g3 = graph.adjacency(M3, weighted=TRUE, mode="undirected",
+                     add.rownames=TRUE)
+
 # prepare ingredients for plot
 V(g3)$size = 10
 V(g3)$label = V(g)$name
