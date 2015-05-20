@@ -17,7 +17,7 @@ incidents = data$incidentdescription
 corpus = Corpus(VectorSource(incidents))
 
 # term-document matrix
-tdm2 = TermDocumentMatrix(corpus,control=list(removePunctuations=TRUE,tolower=TRUE,stopwords=stopwords('SMART')
+tdm2 = TermDocumentMatrix(corpus,control=list(removePunctuations=TRUE,tolower=TRUE,stopwords=stopwords('SMART')))
 
 # convert tdm to matrix
 m2 = as.matrix(tdm2)
